@@ -71,7 +71,7 @@ int main()
             if ( c == '~' )
                 current[i][j] = 1;
         }
-    }PWeba
+    }
     input.close();
 
 
