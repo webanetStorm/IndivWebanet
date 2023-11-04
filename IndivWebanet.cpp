@@ -1,7 +1,8 @@
 ﻿#include <iostream>
+#include <cstdlib>
 #include <fstream>
 #include <vector>
-#include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -97,7 +98,7 @@ void DisplayGeneration( vector<vector<int>> current )
     cout << "\n----------------------\n";
 }
 
-int NumSurvivors( vector<vector<int>> current )
+int CountSurvivors( vector<vector<int>> current )
 {
     int result = 0;
 
@@ -109,7 +110,8 @@ int NumSurvivors( vector<vector<int>> current )
     return result;
 }
 
-int main() {
+int main()
+{
 
     setlocale( LC_ALL, "Russian" );
 
@@ -139,14 +141,14 @@ int main() {
         LogGeneration( current );
         UpdateGeneration( current, next );
 
-        current = next;
-
-        if ( NumSurvivors( current ) == 0 )
+        if ( CountSurvivors( current ) == 0 )
         {
             cout << "\nВсе микробы погибли, жизнь завершилась на " << generation << " поколении." << endl;
 
             return 0;
         }
+
+        current = next;
     }
 
 
