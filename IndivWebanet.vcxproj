@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="work.dat" />
+    <None Include="work.out" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

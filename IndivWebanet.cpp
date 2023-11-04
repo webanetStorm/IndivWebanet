@@ -1,99 +1,154 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
 
 const int SIZE = 21;
 
-void displayGeneration( vector<vector<int>>& generation )
+void Run( vector<vector<int>>& current )
 {
+    srand( static_cast<unsigned int>( time( 0 ) ) );
+
+    ofstream file( "work.dat" );
+
     for ( int i = 0; i < SIZE; i++ )
     {
         for ( int j = 0; j < SIZE; j++ )
-            generation[i][j] == 0 ? cout << ' ' : cout << '~';
-        cout << endl;
+        {
+            if ( ( rand() % 2 ) + 1 == 1 )
+            {
+                file << 'X';
+                current[i][j] = 1;
+            }
+            else
+                file << '_';
+        }
+        file << '\n';
     }
+
+    file.close();
 }
 
-void updateGeneration( vector<vector<int>>& current, vector<vector<int>>& next )
+void LogGeneration( vector<vector<int>> current )
+{
+    ofstream outputFile( "work.out" );
+
+    for ( vector<int> row : current )
+    {
+        for ( int elem : row )
+            elem == 1 ? outputFile << 'X' : outputFile << ' ';
+        outputFile << endl;
+    }
+
+    outputFile.close();
+}
+
+int CountNeighbors( vector<vector<int>> current, int i, int j )
+{
+    int result = 0;
+
+    for ( int dx = -1; dx <= 1; dx++ )
+    {
+        for ( int dy = -1; dy <= 1; dy++ )
+        {
+            if ( dx == 0 and dy == 0 ) 
+                continue;
+
+            int x = i + dx, y = j + dy;
+
+            if ( x >= 0 and x < SIZE and y >= 0 and y < SIZE )
+                result += current[x][y];
+        }
+    }
+
+    return result;
+}
+
+void UpdateGeneration( vector<vector<int>> current, vector<vector<int>>& next )
 {
     for ( int i = 0; i < SIZE; i++ )
     {
         for ( int j = 0; j < SIZE; j++ )
         {
-            int neighbors = 0;
+            int neighbors = CountNeighbors( current, i, j );
 
-            for ( int dx = -1; dx <= 1; dx++ )
-            {
-                for ( int dy = -1; dy <= 1; dy++ )
-                {
-                    if ( dx == 0 and dy == 0 ) 
-                        continue;
-
-                    int x = i + dx;
-                    int y = j + dy;
-
-                    if ( x >= 0 and x < SIZE and y >= 0 and y < SIZE and current[x][y] > 0 )
-                        neighbors++;
-                }
-            }
-
-            if ( current[i][j] > 0 )
+            if ( current[i][j] >= 1 and current[i][j] <= 11 )
                 neighbors == 2 or neighbors == 3 ? next[i][j] = current[i][j] + 1 : next[i][j] = 0;
             else if ( current[i][j] == 0 )
-                if ( neighbors == 3 )
-                    next[i][j] = 1;
+                neighbors == 3 ? next[i][j] = 1 : next[i][j] = 0;
             else if ( current[i][j] == 12 )
                 next[i][j] = 0;
         }
     }
 }
 
-int main()
+void DisplayGeneration( vector<vector<int>> current )
 {
+    for ( vector<int> row : current )
+    {
+        for ( int elem : row )
+            elem == 1 ? cout << 'X' : cout << ' ';
+        cout << endl;
+    }
+
+    cout << "\n----------------------\n";
+}
+
+int NumSurvivors( vector<vector<int>> current )
+{
+    int result = 0;
+
+    for ( vector<int> row : current )
+        for ( int elem : row )
+            if ( elem > 0 )
+                result++;
+
+    return result;
+}
+
+int main() {
 
     setlocale( LC_ALL, "Russian" );
+
+
+
+    unsigned int numGenerations;
+
+    cout << "Введите количество поколений: ";
+    if ( !( cin >>numGenerations ) or numGenerations > 100 )
+    {
+        cout << "Некорректный ввод\n";
+
+        return 1;
+    }
 
 
     vector<vector<int>> current( SIZE, vector<int>( SIZE, 0 ) );
     vector<vector<int>> next( SIZE, vector<int>( SIZE, 0 ) );
 
-    ifstream input( "work.dat" );
-    char c;
+    Run( current );
 
-    for ( int i = 0; i < SIZE; i++ )
+    for ( int generation = 1; generation <= numGenerations; generation++ )
     {
-        for ( int j = 0; j < SIZE; j++ )
+        cout << "\nПоколение " << generation << ":\n";
+        
+        DisplayGeneration( current );
+        LogGeneration( current );
+        UpdateGeneration( current, next );
+
+        current = next;
+
+        if ( NumSurvivors( current ) == 0 )
         {
-            input >> c;
-            if ( c == '~' )
-                current[i][j] = 1;
+            cout << "\nВсе микробы погибли, жизнь завершилась на " << generation << " поколении." << endl;
+
+            return 0;
         }
     }
-    input.close();
 
-
-    unsigned int generations;
-
-    cout << "Кол-во поколений: ";
-    if ( !( cin >> generations ) or generations > 100 )
-    {
-        cout << "Некорректный ввод";
-
-        return 1;
-    }
-
-    ofstream output( "work.out" );
-    for ( int i = 0; i < generations; i++ )
-    {
-        displayGeneration( current );
-        updateGeneration( current, next );
-        swap( current, next );
-    }
-
-    output.close();
 
 
     return 0;

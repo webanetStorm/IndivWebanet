@@ -21,5 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="work.dat" />
+    <None Include="work.out" />
   </ItemGroup>
 </Project>
