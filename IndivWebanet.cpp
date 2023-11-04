@@ -127,7 +127,7 @@ int main()
     unsigned int numGenerations; // Колиычество поколений.
 
     cout << "Введите количество поколений: "; // Вывод.
-    if ( !( cin >>numGenerations ) or numGenerations > 100 ) // Валидация ввода.
+    if ( !( cin >> numGenerations ) or numGenerations > 100 ) // Валидация ввода.
     {
         cout << "Некорректный ввод\n"; // Вывод.
 
