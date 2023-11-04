@@ -91,11 +91,11 @@ void DisplayGeneration( vector<vector<int>> current )
     for ( vector<int> row : current )
     {
         for ( int elem : row )
-            elem == 1 ? cout << 'X' : cout << ' ';
+            elem > 0 ? cout << 'X' : cout << ' ';
         cout << endl;
     }
 
-    cout << "\n----------------------\n";
+    cout << "\n---------------------\n";
 }
 
 int CountSurvivors( vector<vector<int>> current )
@@ -135,7 +135,7 @@ int main()
 
     for ( int generation = 1; generation <= numGenerations; generation++ )
     {
-        cout << "\nПоколение " << generation << ":\n";
+        cout << "\nПоколение " << generation << ":\n\n";
         
         DisplayGeneration( current );
         LogGeneration( current );
@@ -143,7 +143,7 @@ int main()
 
         if ( CountSurvivors( current ) == 0 )
         {
-            cout << "\nВсе микробы погибли, жизнь завершилась на " << generation << " поколении." << endl;
+            cout << "\nВсе микробы погибли, жизнь завершилась на " << generation - 1 << " поколении.\n";
 
             return 0;
         }
