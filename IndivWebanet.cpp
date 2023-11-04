@@ -33,6 +33,18 @@ void Run( vector<vector<int>>& current )
     file.close();
 }
 
+void DisplayGeneration( vector<vector<int>> current )
+{
+    for ( vector<int> row : current )
+    {
+        for ( int elem : row )
+            elem > 0 ? cout << 'X' : cout << ' ';
+        cout << endl;
+    }
+
+    cout << "\n---------------------\n";
+}
+
 void LogGeneration( vector<vector<int>> current )
 {
     ofstream outputFile( "work.out" );
@@ -84,18 +96,6 @@ void UpdateGeneration( vector<vector<int>> current, vector<vector<int>>& next )
                 next[i][j] = 0;
         }
     }
-}
-
-void DisplayGeneration( vector<vector<int>> current )
-{
-    for ( vector<int> row : current )
-    {
-        for ( int elem : row )
-            elem > 0 ? cout << 'X' : cout << ' ';
-        cout << endl;
-    }
-
-    cout << "\n---------------------\n";
 }
 
 int CountSurvivors( vector<vector<int>> current )
